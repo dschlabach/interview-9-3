@@ -29,7 +29,8 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
     birthdate: <BirthdayInput onChange={handleChange} />,
   };
 
-  const handleSave = async () => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       await updateUserDataMutation.mutateAsync({
         userId,
@@ -37,6 +38,7 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
         onboardingStep: currentStep + 1,
       });
       nextStep();
+      return;
     } catch (error) {
       console.error("Error saving data:", error);
       alert("Error saving data. Please try again.");
@@ -66,19 +68,21 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   const formIsValid = allFieldsFilled();
 
   return (
-    <div className="space-y-4">
-      {config.map((componentName, index) => (
-        <React.Fragment key={index}>
-          {componentMap[componentName as keyof typeof componentMap] || null}
-        </React.Fragment>
-      ))}
-      <button
-        onClick={handleSave}
-        className="w-full bg-emerald-800 text-white py-2 px-4 rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={!formIsValid}
-      >
-        Save
-      </button>
+    <div>
+      <form onSubmit={handleSave} className="space-y-4">
+        {config.map((componentName, index) => (
+          <React.Fragment key={index}>
+            {componentMap[componentName as keyof typeof componentMap] || null}
+          </React.Fragment>
+        ))}
+        <button
+          type="submit"
+          className="w-full bg-emerald-800 text-white py-2 px-4 rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!formIsValid}
+        >
+          Save
+        </button>
+      </form>
     </div>
   );
 };
