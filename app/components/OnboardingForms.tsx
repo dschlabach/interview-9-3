@@ -9,14 +9,14 @@ interface OnboardingFormsProps {
   config: string[];
   userId: string;
   currentStep: number;
-  nextStep: () => void;
+  incrementStep: () => void;
 }
 
 const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   config,
   userId,
   currentStep,
-  nextStep,
+  incrementStep,
 }) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const updateUserDataMutation = trpc.users.updateUserData.useMutation();
@@ -38,7 +38,7 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
         data: formData,
         onboardingStep: currentStep + 1,
       });
-      nextStep();
+      incrementStep();
       return;
     } catch (error) {
       console.error("Error saving data:", error);

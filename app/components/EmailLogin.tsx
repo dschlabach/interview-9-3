@@ -2,10 +2,10 @@ import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
 interface EmailLoginProps {
-  nextStep: () => void;
+  incrementStep: () => void;
 }
 
-const EmailLogin: React.FC<EmailLoginProps> = ({ nextStep }) => {
+const EmailLogin: React.FC<EmailLoginProps> = ({ incrementStep }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,7 +25,7 @@ const EmailLogin: React.FC<EmailLoginProps> = ({ nextStep }) => {
       if (user.userId) {
         // Store the userId in localStorage in case user refreshes
         localStorage.setItem("userId", user.userId);
-        nextStep();
+        incrementStep();
       }
     } catch (error) {
       const errorMessage =

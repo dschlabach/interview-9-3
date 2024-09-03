@@ -7,6 +7,7 @@ import StepIndicator from "@/app/components/StepIndicator";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 import FinishedOnboarding from "@/app/components/FinishedOnboarding";
+import Spinner from "@/app/components/Spinner";
 
 const getUserId = () => {
   if (typeof window !== "undefined") {
@@ -16,17 +17,17 @@ const getUserId = () => {
 };
 
 const OnboardingFlow = () => {
-  const savedUserId = getUserId();
+  const localUserId = getUserId();
   const { data: user, isLoading } = trpc.users.getUser.useQuery(
     {
-      userId: savedUserId ?? "",
+      userId: localUserId ?? "",
     },
     // Probably would do this better in production
-    { retry: false, enabled: !!savedUserId }
+    { retry: false, enabled: !!localUserId }
   );
 
   const [step, setStep] = useState(user?.onboardingStep ?? 1);
-  const nextStep = () => setStep(step + 1);
+  const incrementStep = () => setStep(step + 1);
 
   React.useEffect(() => {
     if (user) {
@@ -36,20 +37,31 @@ const OnboardingFlow = () => {
 
   const { data: onboardingConfig } = trpc.admin.getOnboardingConfig.useQuery();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  // Prevent SSR
+  const [isMounted, setIsMounted] = useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if ((localUserId && isLoading) || !isMounted) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-3xl w-full mx-auto mt-10 bg-white rounded-lg shadow-xl px-10 py-20">
       <div className="flex flex-col gap-8 max-w-md mx-auto">
-        {step === 1 && <EmailLogin nextStep={nextStep} />}
+        {step === 1 && <EmailLogin incrementStep={incrementStep} />}
         {step === 2 && (
           <OnboardingForms
             currentStep={step}
             config={onboardingConfig?.[0]?.components ?? []}
             userId={user?.id ?? ""}
-            nextStep={nextStep}
+            incrementStep={incrementStep}
           />
         )}
         {step === 3 && (
@@ -57,7 +69,7 @@ const OnboardingFlow = () => {
             currentStep={step}
             config={onboardingConfig?.[1]?.components ?? []}
             userId={user?.id ?? ""}
-            nextStep={nextStep}
+            incrementStep={incrementStep}
           />
         )}
         {step === 4 && <FinishedOnboarding />}
