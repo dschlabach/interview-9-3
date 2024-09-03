@@ -2,16 +2,13 @@ import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
 interface EmailLoginProps {
-  updateUserData: (data: { email: string }) => void;
   nextStep: () => void;
 }
 
-const EmailLogin: React.FC<EmailLoginProps> = ({
-  updateUserData,
-  nextStep,
-}) => {
+const EmailLogin: React.FC<EmailLoginProps> = ({ nextStep }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const createUserMutation = trpc.users.createUser.useMutation();
 
@@ -20,23 +17,21 @@ const EmailLogin: React.FC<EmailLoginProps> = ({
 
     try {
       const user = await createUserMutation.mutateAsync({ email, password });
-      console.log("user: ", user);
-      if (createUserMutation.data) {
-        updateUserData({ email });
 
-        // TODO: set local storage
+      if (user.userId) {
+        // Store the userId in localStorage in case they refresh
+        localStorage.setItem("userId", user.userId);
         nextStep();
       }
     } catch (error) {
-      console.error("Error creating user:", error);
-      // Handle error (e.g., show error message to user)
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      setError(`Error creating account. ${errorMessage}`);
     }
-
-    nextStep();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="flex flex-col gap-1">
         <h2 className="text-2xl font-bold">Welcome!</h2>
         <p className="text-gray-600 text-sm">
@@ -53,6 +48,7 @@ const EmailLogin: React.FC<EmailLoginProps> = ({
         <input
           type="email"
           id="email"
+          placeholder="email@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -70,6 +66,7 @@ const EmailLogin: React.FC<EmailLoginProps> = ({
         <input
           type="password"
           id="password"
+          placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -83,6 +80,7 @@ const EmailLogin: React.FC<EmailLoginProps> = ({
       >
         Next
       </button>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </form>
   );
 };

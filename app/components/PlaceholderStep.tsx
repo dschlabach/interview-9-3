@@ -1,3 +1,6 @@
+import AboutMe from "@/app/components/AboutMe";
+import AddressInputs from "@/app/components/AddressInputs";
+
 interface PlaceholderStepProps {
   stepName: string;
   nextStep: () => void;
@@ -14,7 +17,11 @@ const PlaceholderStep: React.FC<PlaceholderStepProps> = ({
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold mb-4">{stepName}</h2>
-      <p className="text-gray-600">This is a placeholder for {stepName}.</p>
+      <div className="flex flex-col gap-2">
+        <AboutMe />
+        <AddressInputs onChange={() => {}} />
+      </div>
+
       <div className="flex justify-between">
         <button
           onClick={prevStep}

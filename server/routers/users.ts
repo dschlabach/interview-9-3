@@ -41,4 +41,20 @@ export const userRouter = router({
         userId: newUser.id,
       };
     }),
+  getUser: procedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ input }) => {
+      const { userId } = input;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User not logged in",
+        });
+      }
+
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+
+      return user;
+    }),
 });
