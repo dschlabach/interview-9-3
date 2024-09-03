@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 
-const AboutMe = () => {
+const AboutMe = ({
+  onChange,
+}: {
+  onChange: (field: string, value: string) => void;
+}) => {
   const [aboutText, setAboutText] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setAboutText(event.target.value);
+    onChange("aboutMe", event.target.value);
   };
 
   return (

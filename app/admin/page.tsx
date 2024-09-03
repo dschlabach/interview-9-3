@@ -58,13 +58,11 @@ const AdminPage = () => {
       return;
     }
     try {
-      await updateConfigMutation.mutateAsync({
-        config: [screen1Config, screen2Config],
-        pageNumber: 1,
-      });
-      alert("Configuration updated successfully");
+      await updateConfigMutation.mutateAsync([
+        { pageNumber: 1, config: screen1Config },
+        { pageNumber: 2, config: screen2Config },
+      ]);
     } catch (error) {
-      console.log("error:", error);
       alert("Error updating configuration");
     }
   };
@@ -157,10 +155,14 @@ const AdminPage = () => {
 
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-emerald-800 text-white rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          disabled={!isConfigValid()}
+          className="w-full px-4 py-2 bg-emerald-800 text-white rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50"
+          disabled={!isConfigValid() || updateConfigMutation.isPending}
         >
-          Save Configuration
+          {updateConfigMutation.isPending
+            ? "Saving..."
+            : updateConfigMutation.isSuccess
+            ? "Saved"
+            : "Save Configuration"}
         </button>
       </form>
     </div>

@@ -5,28 +5,36 @@ import { prisma } from "@/utils/db";
 export const adminRouter = router({
   updateOnboardingConfig: procedure
     .input(
-      z.object({
-        config: z.array(z.array(z.string())),
-        pageNumber: z.number(),
-      })
+      z.array(
+        z.object({
+          pageNumber: z.number(),
+          config: z.array(z.string()),
+        })
+      )
     )
     .mutation(async ({ input }) => {
-      const { config, pageNumber } = input;
-      console.log("pageNumber:", pageNumber);
-      console.log("config:", config);
-
       try {
         // Update the database with the new configuration
-        await prisma.pageComponent.upsert({
-          where: { pageNumber },
-          update: { components: config },
-          create: { pageNumber, components: config },
-        });
+        await Promise.all(
+          input.map(async ({ pageNumber, config }) => {
+            await prisma.page.upsert({
+              where: { pageNumber },
+              update: { components: config },
+              create: { pageNumber, components: config },
+            });
+          })
+        );
 
-        return { message: "Configuration updated successfully" };
+        return { message: "Configuration updated successfully", success: true };
       } catch (error) {
         console.error("Error updating configuration:", error);
-        throw error;
+        return { message: "Error updating configuration", success: false };
       }
     }),
+
+  getOnboardingConfig: procedure.query(async () => {
+    const pages = await prisma.page.findMany();
+    console.log("pages:", pages);
+    return pages;
+  }),
 });

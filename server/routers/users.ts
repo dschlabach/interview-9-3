@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { prisma } from "@/utils/db";
 import { TRPCError } from "@trpc/server";
 import { procedure, router } from "@/server/trpc";
+import { Prisma } from "@prisma/client";
 
 export const userRouter = router({
   createUser: procedure
@@ -56,5 +57,55 @@ export const userRouter = router({
       const user = await prisma.user.findUnique({ where: { id: userId } });
 
       return user;
+    }),
+
+  updateUserData: procedure
+    .input(
+      z.object({
+        userId: z.string(),
+        data: z.record(z.string(), z.string()),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { userId, data } = input;
+
+      const updateData: Prisma.UserUpdateInput = {};
+
+      if (data.aboutMe) {
+        updateData.aboutMe = data.aboutMe;
+      }
+
+      if (data.birthdate) {
+        updateData.birthdate = new Date(data.birthdate);
+      }
+
+      if (data.street && data.city && data.state && data.zip) {
+        updateData.address = {
+          upsert: {
+            create: {
+              street: data.street,
+              city: data.city,
+              state: data.state,
+              zip: data.zip,
+            },
+            update: {
+              street: data.street,
+              city: data.city,
+              state: data.state,
+              zip: data.zip,
+            },
+          },
+        };
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: updateData,
+      });
+
+      return {
+        message: "User data updated successfully",
+        userId: updatedUser.id,
+      };
     }),
 });

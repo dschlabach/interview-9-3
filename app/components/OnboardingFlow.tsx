@@ -1,4 +1,5 @@
 import EmailLogin from "@/app/components/EmailLogin";
+import React from "react";
 import OnboardingForms from "@/app/components/OnboardingForms";
 import PlaceholderStep from "@/app/components/PlaceholderStep";
 import StepIndicator from "@/app/components/StepIndicator";
@@ -7,15 +8,19 @@ import { useState } from "react";
 
 const OnboardingFlow = () => {
   const [step, setStep] = useState(2);
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-  });
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
-  const userId = localStorage.getItem("userId");
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Load userId from localStorage on page load
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserId(localStorage.getItem("userId"));
+    }
+  }, []);
+
   const { data: user, isLoading } = trpc.users.getUser.useQuery(
     {
       userId: userId ?? "",
@@ -23,6 +28,11 @@ const OnboardingFlow = () => {
     // Probably would do this better in production
     { retry: false, enabled: !!userId }
   );
+
+  const { data: onboardingConfig, error } =
+    trpc.admin.getOnboardingConfig.useQuery();
+
+  console.log("onboardingConfig:", onboardingConfig);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -34,19 +44,22 @@ const OnboardingFlow = () => {
         {step === 1 && <EmailLogin nextStep={nextStep} />}
         {step === 2 && (
           <OnboardingForms
-            // TODO: make this dynamic
-            config={["aboutMe", "address"]}
+            config={onboardingConfig?.[0]?.components ?? []}
             onChange={(field, value) => {
               console.log(field, value);
             }}
+            userId={userId ?? ""}
+            nextStep={nextStep}
           />
         )}
         {step === 3 && (
-          <PlaceholderStep
-            stepName="Step 3"
-            nextStep={() => console.log("Onboarding complete", userData)}
-            prevStep={prevStep}
-            isLastStep
+          <OnboardingForms
+            config={onboardingConfig?.[1]?.components ?? []}
+            onChange={(field, value) => {
+              console.log(field, value);
+            }}
+            userId={userId ?? ""}
+            nextStep={nextStep}
           />
         )}
         <StepIndicator totalSteps={3} currentStep={step} />
