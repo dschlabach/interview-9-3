@@ -1,3 +1,4 @@
+import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
 interface EmailLoginProps {
@@ -12,10 +13,25 @@ const EmailLogin: React.FC<EmailLoginProps> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const createUserMutation = trpc.users.createUser.useMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(email, password);
-    // updateUserData({ email: localEmail });
+
+    try {
+      const user = await createUserMutation.mutateAsync({ email, password });
+      console.log("user: ", user);
+      if (createUserMutation.data) {
+        updateUserData({ email });
+
+        // TODO: set local storage
+        nextStep();
+      }
+    } catch (error) {
+      console.error("Error creating user:", error);
+      // Handle error (e.g., show error message to user)
+    }
+
     nextStep();
   };
 

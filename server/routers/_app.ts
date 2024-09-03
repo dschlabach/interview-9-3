@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { procedure, router } from "../trpc";
+import { userRouter } from "./users"; // Add this import
 
 export const appRouter = router({
   hello: procedure
@@ -13,6 +14,7 @@ export const appRouter = router({
         greeting: `hello ${opts.input.text}`,
       };
     }),
+  users: userRouter, // Add this line to include the userRouter
 });
 
 // export type definition of API

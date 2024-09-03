@@ -6,7 +6,7 @@ const prismaClientSingleton = () => {
   return new PrismaClient({
     datasources: {
       db: {
-        url: process.env.DATABASE_URL + "?pgbouncer=true",
+        url: process.env.DB_URL,
       },
     },
   });
