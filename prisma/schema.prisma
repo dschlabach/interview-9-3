@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,24 +9,29 @@ datasource db {
 }
 
 model User {
-    id String @id @default(cuid())
-    email String @unique
-    password String
-    salt String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    aboutMe String?
-    birthdate DateTime?
-    address Address?
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  salt      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  aboutMe   String?
+  birthdate DateTime?
+  address   Address?
 }
 
 model Address {
-    id String @id @default(cuid())
-    street String
-    city String
-    state String
-    zip String
-    userId String @unique
-    user User @relation(fields: [userId], references: [id])
+  id     String @id @default(cuid())
+  street String
+  city   String
+  state  String
+  zip    String
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }
 
+model Page {
+  id            Int             @id @default(autoincrement())
+  pageNumber    Int             @unique
+  components Json
+}

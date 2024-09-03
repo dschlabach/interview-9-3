@@ -1,4 +1,5 @@
 import EmailLogin from "@/app/components/EmailLogin";
+import OnboardingForms from "@/app/components/OnboardingForms";
 import PlaceholderStep from "@/app/components/PlaceholderStep";
 import StepIndicator from "@/app/components/StepIndicator";
 import { trpc } from "@/utils/trpc";
@@ -32,10 +33,12 @@ const OnboardingFlow = () => {
       <div className="flex flex-col gap-8 max-w-md mx-auto">
         {step === 1 && <EmailLogin nextStep={nextStep} />}
         {step === 2 && (
-          <PlaceholderStep
-            stepName="Step 2"
-            nextStep={nextStep}
-            prevStep={prevStep}
+          <OnboardingForms
+            // TODO: make this dynamic
+            config={["aboutMe", "address"]}
+            onChange={(field, value) => {
+              console.log(field, value);
+            }}
           />
         )}
         {step === 3 && (
