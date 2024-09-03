@@ -11,10 +11,6 @@ const getUserId = () => {
 };
 
 const OnboardingFlow = () => {
-  const [step, setStep] = useState(getUserId() ? 2 : 1);
-
-  const nextStep = () => setStep(step + 1);
-
   const savedUserId = getUserId();
   const { data: user, isLoading } = trpc.users.getUser.useQuery(
     {
@@ -24,10 +20,17 @@ const OnboardingFlow = () => {
     { retry: false, enabled: !!savedUserId }
   );
 
+  const [step, setStep] = useState(user?.onboardingStep ?? 1);
+  const nextStep = () => setStep(step + 1);
+
+  React.useEffect(() => {
+    if (user) {
+      setStep(user.onboardingStep ?? 1);
+    }
+  }, [user]);
+
   const { data: onboardingConfig, error } =
     trpc.admin.getOnboardingConfig.useQuery();
-
-  console.log("onboardingConfig:", onboardingConfig);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -39,6 +42,7 @@ const OnboardingFlow = () => {
         {step === 1 && <EmailLogin nextStep={nextStep} />}
         {step === 2 && (
           <OnboardingForms
+            currentStep={step}
             config={onboardingConfig?.[0]?.components ?? []}
             onChange={(field, value) => {
               console.log(field, value);
@@ -49,6 +53,7 @@ const OnboardingFlow = () => {
         )}
         {step === 3 && (
           <OnboardingForms
+            currentStep={step}
             config={onboardingConfig?.[1]?.components ?? []}
             onChange={(field, value) => {
               console.log(field, value);

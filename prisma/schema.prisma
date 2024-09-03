@@ -23,6 +23,7 @@ model User {
   aboutMe   String?
   birthdate DateTime?
   address   Address?
+  onboardingStep Int?
 }
 
 model Address {

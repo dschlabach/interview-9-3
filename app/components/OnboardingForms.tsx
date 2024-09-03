@@ -8,6 +8,7 @@ interface OnboardingFormsProps {
   config: string[];
   onChange: (field: string, value: string) => void;
   userId: string;
+  currentStep: number;
   nextStep: () => void;
 }
 
@@ -15,6 +16,7 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   config,
   onChange,
   userId,
+  currentStep,
   nextStep,
 }) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
@@ -36,6 +38,7 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
       await updateUserDataMutation.mutateAsync({
         userId,
         data: formData,
+        onboardingStep: currentStep + 1,
       });
       nextStep();
     } catch (error) {

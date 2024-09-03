@@ -16,10 +16,14 @@ const EmailLogin: React.FC<EmailLoginProps> = ({ nextStep }) => {
     e.preventDefault();
 
     try {
-      const user = await createUserMutation.mutateAsync({ email, password });
+      const user = await createUserMutation.mutateAsync({
+        email,
+        password,
+        onboardingStep: 2,
+      });
 
       if (user.userId) {
-        // Store the userId in localStorage in case they refresh
+        // Store the userId in localStorage in case user refreshes
         localStorage.setItem("userId", user.userId);
         nextStep();
       }

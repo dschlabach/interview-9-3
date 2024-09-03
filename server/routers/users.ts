@@ -11,6 +11,7 @@ export const userRouter = router({
       z.object({
         email: z.string().email(),
         password: z.string().min(6),
+        onboardingStep: z.number().optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -34,6 +35,7 @@ export const userRouter = router({
           email,
           password: hashedPassword,
           salt,
+          onboardingStep: input.onboardingStep,
         },
       });
 
@@ -77,11 +79,11 @@ export const userRouter = router({
       z.object({
         userId: z.string(),
         data: z.record(z.string(), z.string()),
+        onboardingStep: z.number().optional(),
       })
     )
     .mutation(async ({ input }) => {
       const { userId, data } = input;
-      console.log("data:", data);
 
       const updateData: Prisma.UserUpdateInput = {};
 
@@ -112,11 +114,9 @@ export const userRouter = router({
         };
       }
 
-      console.log("updateData:", updateData);
-
       const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: updateData,
+        data: { ...updateData, onboardingStep: input.onboardingStep },
       });
 
       console.log("updatedUser:", updatedUser);
