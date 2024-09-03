@@ -42,6 +42,7 @@ export const userRouter = router({
         userId: newUser.id,
       };
     }),
+
   getUser: procedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ input }) => {
@@ -58,6 +59,15 @@ export const userRouter = router({
 
       return user;
     }),
+
+  getAllUsers: procedure.query(async () => {
+    const users = await prisma.user.findMany({
+      include: {
+        address: true,
+      },
+    });
+    return users;
+  }),
 
   updateUserData: procedure
     .input(

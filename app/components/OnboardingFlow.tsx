@@ -14,14 +14,14 @@ const OnboardingFlow = () => {
   const [step, setStep] = useState(getUserId() ? 2 : 1);
 
   const nextStep = () => setStep(step + 1);
-  const [userId, setUserId] = useState<string | null>(getUserId());
 
+  const savedUserId = getUserId();
   const { data: user, isLoading } = trpc.users.getUser.useQuery(
     {
-      userId: userId ?? "",
+      userId: savedUserId ?? "",
     },
     // Probably would do this better in production
-    { retry: false, enabled: !!userId }
+    { retry: false, enabled: !!savedUserId }
   );
 
   const { data: onboardingConfig, error } =
@@ -43,7 +43,7 @@ const OnboardingFlow = () => {
             onChange={(field, value) => {
               console.log(field, value);
             }}
-            userId={userId ?? ""}
+            userId={user?.id ?? ""}
             nextStep={nextStep}
           />
         )}
@@ -53,7 +53,7 @@ const OnboardingFlow = () => {
             onChange={(field, value) => {
               console.log(field, value);
             }}
-            userId={userId ?? ""}
+            userId={user?.id ?? ""}
             nextStep={nextStep}
           />
         )}

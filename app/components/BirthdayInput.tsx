@@ -23,6 +23,7 @@ const BirthdayInput = ({
         value={birthday}
         onChange={handleDateChange}
         aria-label="Birthday"
+        className="border border-gray-300 rounded-md p-2 w-full"
       />
     </div>
   );
