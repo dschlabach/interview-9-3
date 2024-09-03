@@ -22,6 +22,7 @@ const AboutMe = ({
         placeholder="Write something about yourself..."
         rows={5}
         cols={50}
+        required
       />
     </div>
   );

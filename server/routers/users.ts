@@ -119,8 +119,6 @@ export const userRouter = router({
         data: { ...updateData, onboardingStep: input.onboardingStep },
       });
 
-      console.log("updatedUser:", updatedUser);
-
       return {
         message: "User data updated successfully",
         userId: updatedUser.id,

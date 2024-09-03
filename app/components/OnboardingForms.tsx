@@ -6,7 +6,6 @@ import BirthdayInput from "@/app/components/BirthdayInput";
 
 interface OnboardingFormsProps {
   config: string[];
-  onChange: (field: string, value: string) => void;
   userId: string;
   currentStep: number;
   nextStep: () => void;
@@ -14,7 +13,6 @@ interface OnboardingFormsProps {
 
 const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   config,
-  onChange,
   userId,
   currentStep,
   nextStep,
@@ -22,10 +20,8 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   const [formData, setFormData] = useState<Record<string, string>>({});
   const updateUserDataMutation = trpc.users.updateUserData.useMutation();
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string) =>
     setFormData((prev) => ({ ...prev, [field]: value }));
-    onChange(field, value);
-  };
 
   const componentMap = {
     aboutMe: <AboutMe onChange={handleChange} />,
@@ -47,6 +43,28 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
     }
   };
 
+  const allFieldsFilled = () => {
+    return config.every((componentName) => {
+      switch (componentName) {
+        case "aboutMe":
+          return !!formData.aboutMe;
+        case "address":
+          return (
+            !!formData.street &&
+            !!formData.city &&
+            !!formData.state &&
+            !!formData.zip
+          );
+        case "birthdate":
+          return !!formData.birthdate;
+        default:
+          return true;
+      }
+    });
+  };
+
+  const formIsValid = allFieldsFilled();
+
   return (
     <div className="space-y-4">
       {config.map((componentName, index) => (
@@ -56,7 +74,8 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
       ))}
       <button
         onClick={handleSave}
-        className="w-full bg-emerald-800 text-white py-2 px-4 rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+        className="w-full bg-emerald-800 text-white py-2 px-4 rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={!formIsValid}
       >
         Save
       </button>

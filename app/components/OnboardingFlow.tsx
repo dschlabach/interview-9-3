@@ -34,8 +34,7 @@ const OnboardingFlow = () => {
     }
   }, [user]);
 
-  const { data: onboardingConfig, error } =
-    trpc.admin.getOnboardingConfig.useQuery();
+  const { data: onboardingConfig } = trpc.admin.getOnboardingConfig.useQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -49,9 +48,6 @@ const OnboardingFlow = () => {
           <OnboardingForms
             currentStep={step}
             config={onboardingConfig?.[0]?.components ?? []}
-            onChange={(field, value) => {
-              console.log(field, value);
-            }}
             userId={user?.id ?? ""}
             nextStep={nextStep}
           />
@@ -60,9 +56,6 @@ const OnboardingFlow = () => {
           <OnboardingForms
             currentStep={step}
             config={onboardingConfig?.[1]?.components ?? []}
-            onChange={(field, value) => {
-              console.log(field, value);
-            }}
             userId={user?.id ?? ""}
             nextStep={nextStep}
           />
