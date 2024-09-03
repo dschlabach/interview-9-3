@@ -12,7 +12,7 @@ const AddressInputs: React.FC<AddressInputsProps> = ({ onChange }) => {
         type="text"
         className="border border-gray-300 rounded-md p-2 w-full"
         placeholder="Street Address"
-        onChange={(e) => onChange("streetAddress", e.target.value)}
+        onChange={(e) => onChange("street", e.target.value)}
         data-1p-ignore
       />
       <input
@@ -33,7 +33,7 @@ const AddressInputs: React.FC<AddressInputsProps> = ({ onChange }) => {
         type="text"
         className="border border-gray-300 rounded-md p-2 w-full"
         placeholder="ZIP Code"
-        onChange={(e) => onChange("zipCode", e.target.value)}
+        onChange={(e) => onChange("zip", e.target.value)}
         data-1p-ignore
       />
     </div>

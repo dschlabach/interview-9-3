@@ -65,6 +65,9 @@ export const userRouter = router({
       include: {
         address: true,
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
     return users;
   }),

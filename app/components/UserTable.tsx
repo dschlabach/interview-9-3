@@ -8,6 +8,8 @@ const UserTable = () => {
     error,
   } = trpc.users.getAllUsers.useQuery(undefined, {
     refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 0,
   });
 
   if (isLoading) return <div>Loading...</div>;
@@ -34,15 +36,27 @@ const UserTable = () => {
             <tr key={user.id} className={index % 2 === 0 ? "bg-gray-50" : ""}>
               <td className="px-4 py-2">{user.email}</td>
               <td className="px-4 py-2">
-                {new Date(user.createdAt).toLocaleString()}
+                {new Date(user.createdAt).toLocaleString("en-US", {
+                  month: "2-digit",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
               </td>
               <td className="px-4 py-2">
-                {new Date(user.updatedAt).toLocaleString()}
+                {new Date(user.updatedAt).toLocaleString("en-US", {
+                  month: "2-digit",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
               </td>
               <td className="px-4 py-2">{user.aboutMe || "N/A"}</td>
               <td className="px-4 py-2">
                 {user.birthdate
-                  ? new Date(user.birthdate).toLocaleDateString()
+                  ? new Date(user.birthdate).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })
                   : "N/A"}
               </td>
               <td className="px-4 py-2">{user.address?.street || "N/A"}</td>
