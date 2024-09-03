@@ -68,6 +68,7 @@ export const userRouter = router({
     )
     .mutation(async ({ input }) => {
       const { userId, data } = input;
+      console.log("data:", data);
 
       const updateData: Prisma.UserUpdateInput = {};
 
@@ -98,10 +99,14 @@ export const userRouter = router({
         };
       }
 
+      console.log("updateData:", updateData);
+
       const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: updateData,
       });
+
+      console.log("updatedUser:", updatedUser);
 
       return {
         message: "User data updated successfully",

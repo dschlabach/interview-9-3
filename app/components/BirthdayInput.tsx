@@ -12,7 +12,7 @@ const BirthdayInput = ({
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDate = e.target.value;
     setBirthday(newDate);
-    onChange("birthday", newDate);
+    onChange("birthdate", newDate);
   };
 
   return (

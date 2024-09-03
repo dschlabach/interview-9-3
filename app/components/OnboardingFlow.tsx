@@ -4,19 +4,17 @@ import OnboardingForms from "@/app/components/OnboardingForms";
 import StepIndicator from "@/app/components/StepIndicator";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
+import FinishedOnboarding from "@/app/components/FinishedOnboarding";
+
+const getUserId = () => {
+  return localStorage.getItem("userId");
+};
 
 const OnboardingFlow = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(getUserId() ? 2 : 1);
 
   const nextStep = () => setStep(step + 1);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  // Load userId from localStorage on page load
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      setUserId(localStorage.getItem("userId"));
-    }
-  }, []);
+  const [userId, setUserId] = useState<string | null>(getUserId());
 
   const { data: user, isLoading } = trpc.users.getUser.useQuery(
     {
@@ -59,7 +57,8 @@ const OnboardingFlow = () => {
             nextStep={nextStep}
           />
         )}
-        <StepIndicator totalSteps={3} currentStep={step} />
+        {step === 4 && <FinishedOnboarding />}
+        <StepIndicator totalSteps={4} currentStep={step} />
       </div>
     </div>
   );
