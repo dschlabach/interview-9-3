@@ -3,6 +3,7 @@ import { trpc } from "@/utils/trpc";
 import AboutMe from "@/app/components/AboutMe";
 import AddressInputs from "@/app/components/AddressInputs";
 import BirthdayInput from "@/app/components/BirthdayInput";
+import Button from "@/app/components/Button";
 
 interface OnboardingFormsProps {
   config: string[];
@@ -75,13 +76,9 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
             {componentMap[componentName as keyof typeof componentMap] || null}
           </React.Fragment>
         ))}
-        <button
-          type="submit"
-          className="w-full bg-emerald-800 text-white py-2 px-4 rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={!formIsValid}
-        >
+        <Button type="submit" disabled={!formIsValid}>
           Save
-        </button>
+        </Button>
       </form>
     </div>
   );

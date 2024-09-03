@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/app/components/Button";
 import { trpc } from "@/utils/trpc";
 import React from "react";
 
@@ -8,6 +9,8 @@ const componentOptions = ["aboutMe", "address", "birthdate"];
 const AdminPage = () => {
   const [screen1Config, setScreen1Config] = React.useState<string[]>([]);
   const [screen2Config, setScreen2Config] = React.useState<string[]>([]);
+  const [saveButtonText, setSaveButtonText] =
+    React.useState("Save Configuration");
   const updateConfigMutation = trpc.admin.updateOnboardingConfig.useMutation();
 
   const { data: existingConfig } = trpc.admin.getOnboardingConfig.useQuery();
@@ -55,7 +58,7 @@ const AdminPage = () => {
     return (
       screen1Config.length > 0 &&
       screen2Config.length > 0 &&
-      allComponents.length === uniqueComponents.size &&
+      allComponents.length === componentOptions.length &&
       !allComponents.includes("")
     );
   };
@@ -71,10 +74,18 @@ const AdminPage = () => {
         { pageNumber: 1, config: screen1Config },
         { pageNumber: 2, config: screen2Config },
       ]);
+      setSaveButtonText("Saved");
     } catch (error) {
       alert("Error updating configuration");
     }
   };
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSaveButtonText("Save Configuration");
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [updateConfigMutation.isSuccess]);
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
@@ -103,22 +114,18 @@ const AdminPage = () => {
                   </option>
                 ))}
               </select>
-              <button
+              <Button
                 type="button"
                 onClick={() => handleRemoveField(1, index)}
-                className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
               >
                 Remove
-              </button>
+              </Button>
             </div>
           ))}
-          <button
-            type="button"
-            onClick={() => handleAddField(1)}
-            className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          >
+          <Button type="button" onClick={() => handleAddField(1)}>
             Add Field
-          </button>
+          </Button>
         </div>
 
         <div>
@@ -144,35 +151,26 @@ const AdminPage = () => {
                   </option>
                 ))}
               </select>
-              <button
+              <Button
                 type="button"
                 onClick={() => handleRemoveField(2, index)}
-                className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
               >
                 Remove
-              </button>
+              </Button>
             </div>
           ))}
-          <button
-            type="button"
-            onClick={() => handleAddField(2)}
-            className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          >
+          <Button type="button" onClick={() => handleAddField(2)}>
             Add Field
-          </button>
+          </Button>
         </div>
 
-        <button
+        <Button
           type="submit"
-          className="w-full px-4 py-2 bg-emerald-800 text-white rounded-md hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50"
           disabled={!isConfigValid() || updateConfigMutation.isPending}
         >
-          {updateConfigMutation.isPending
-            ? "Saving..."
-            : updateConfigMutation.isSuccess
-            ? "Saved"
-            : "Save Configuration"}
-        </button>
+          {updateConfigMutation.isPending ? "Saving..." : saveButtonText}
+        </Button>
         {updateConfigMutation.isError && (
           <div className="text-red-500">
             Error: {updateConfigMutation.error.message}
