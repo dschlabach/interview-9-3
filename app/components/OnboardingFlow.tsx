@@ -1,3 +1,5 @@
+"use client";
+
 import EmailLogin from "@/app/components/EmailLogin";
 import React from "react";
 import OnboardingForms from "@/app/components/OnboardingForms";
@@ -7,7 +9,10 @@ import { useState } from "react";
 import FinishedOnboarding from "@/app/components/FinishedOnboarding";
 
 const getUserId = () => {
-  return localStorage.getItem("userId");
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("userId");
+  }
+  return null;
 };
 
 const OnboardingFlow = () => {
