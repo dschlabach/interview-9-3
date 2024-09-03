@@ -1,14 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { trpc } from "@/utils/trpc";
+import React from "react";
 
 const componentOptions = ["aboutMe", "address", "birthdate"];
 
 const AdminPage = () => {
-  const [screen1Config, setScreen1Config] = useState<string[]>([]);
-  const [screen2Config, setScreen2Config] = useState<string[]>([]);
+  const [screen1Config, setScreen1Config] = React.useState<string[]>([]);
+  const [screen2Config, setScreen2Config] = React.useState<string[]>([]);
   const updateConfigMutation = trpc.admin.updateOnboardingConfig.useMutation();
+
+  const { data: existingConfig } = trpc.admin.getOnboardingConfig.useQuery();
+
+  React.useEffect(() => {
+    if (existingConfig) {
+      setScreen1Config(existingConfig[0].components);
+      setScreen2Config(existingConfig[1].components);
+    }
+  }, [existingConfig]);
 
   const handleConfigChange = (screen: number, index: number, value: string) => {
     if (screen === 1) {
@@ -164,6 +173,11 @@ const AdminPage = () => {
             ? "Saved"
             : "Save Configuration"}
         </button>
+        {updateConfigMutation.isError && (
+          <div className="text-red-500">
+            Error: {updateConfigMutation.error.message}
+          </div>
+        )}
       </form>
     </div>
   );

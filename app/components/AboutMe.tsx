@@ -13,7 +13,7 @@ const AboutMe = ({
   };
 
   return (
-    <div className="about-me">
+    <div>
       <h2>About Me</h2>
       <textarea
         value={aboutText}

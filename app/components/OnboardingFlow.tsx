@@ -1,7 +1,6 @@
 import EmailLogin from "@/app/components/EmailLogin";
 import React from "react";
 import OnboardingForms from "@/app/components/OnboardingForms";
-import PlaceholderStep from "@/app/components/PlaceholderStep";
 import StepIndicator from "@/app/components/StepIndicator";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
@@ -10,8 +9,6 @@ const OnboardingFlow = () => {
   const [step, setStep] = useState(2);
 
   const nextStep = () => setStep(step + 1);
-  const prevStep = () => setStep(step - 1);
-
   const [userId, setUserId] = useState<string | null>(null);
 
   // Load userId from localStorage on page load

@@ -33,8 +33,6 @@ export const adminRouter = router({
     }),
 
   getOnboardingConfig: procedure.query(async () => {
-    const pages = await prisma.page.findMany();
-    console.log("pages:", pages);
-    return pages;
+    return await prisma.page.findMany();
   }),
 });

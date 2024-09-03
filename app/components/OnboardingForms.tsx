@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { trpc } from "@/utils/trpc";
 import AboutMe from "@/app/components/AboutMe";
 import AddressInputs from "@/app/components/AddressInputs";
+import BirthdayInput from "@/app/components/BirthdayInput";
 
 interface OnboardingFormsProps {
   config: string[];
@@ -27,9 +28,7 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   const componentMap = {
     aboutMe: <AboutMe onChange={handleChange} />,
     address: <AddressInputs onChange={handleChange} />,
-    birthdate: <></>,
-    // TODO: Add birthdate input
-    // birthdate: <BirthdateInput onChange={(value) => handleChange("birthdate", value)} />,
+    birthdate: <BirthdayInput onChange={handleChange} />,
   };
 
   const handleSave = async () => {
