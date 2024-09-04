@@ -54,15 +54,12 @@ const OnboardingFlow = () => {
         className="flex overflow-hidden flex-col gap-8 max-w-xl mx-auto p-16"
         withAnimation
       >
-        <AnimatePresence
-          {...DEFAULT_ANIMATION}
-          mode="popLayout"
-          initial={false}
-        >
+        <AnimatePresence {...DEFAULT_ANIMATION} mode="wait" initial={false}>
           {step === 1 && !isLoading && !localUserId && (
             <motion.div
               key="email"
-              initial={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: 0 }}
+              animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "-100%" }}
               transition={{ duration: 0.3 }}
             >
@@ -72,7 +69,8 @@ const OnboardingFlow = () => {
           {step === 2 && (
             <motion.div
               key="step2"
-              initial={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "-100%" }}
               transition={{ duration: 0.3 }}
             >
@@ -87,7 +85,8 @@ const OnboardingFlow = () => {
           {step === 3 && (
             <motion.div
               key="step3"
-              initial={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "-100%" }}
               transition={{ duration: 0.3 }}
             >
@@ -102,7 +101,8 @@ const OnboardingFlow = () => {
           {step === 4 && (
             <motion.div
               key="finished"
-              initial={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "-100%" }}
               transition={{ duration: 0.3 }}
             >
