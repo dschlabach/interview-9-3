@@ -1,13 +1,18 @@
+import { FADE_IN_ANIMATION } from "@/utils/animations";
+import { motion } from "framer-motion";
 import React from "react";
 
-const FinishedOnboarding: React.FC = () => {
+const FinishedOnboarding = () => {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     window.location.reload();
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <motion.div
+      className="flex flex-col items-center justify-center min-h-[250px]"
+      {...FADE_IN_ANIMATION}
+    >
       <h1 className="text-3xl font-bold mb-6">Welcome to the application!</h1>
       <button
         onClick={handleLogout}
@@ -15,7 +20,7 @@ const FinishedOnboarding: React.FC = () => {
       >
         Logout & Restart
       </button>
-    </div>
+    </motion.div>
   );
 };
 

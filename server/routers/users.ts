@@ -10,7 +10,7 @@ export const userRouter = router({
     .input(
       z.object({
         email: z.string().email(),
-        password: z.string().min(6),
+        password: z.string(),
         onboardingStep: z.number().optional(),
       })
     )

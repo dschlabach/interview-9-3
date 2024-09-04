@@ -4,6 +4,7 @@ import AboutMe from "@/app/components/AboutMe";
 import AddressInputs from "@/app/components/AddressInputs";
 import BirthdayInput from "@/app/components/BirthdayInput";
 import Button from "@/app/components/Button";
+import { motion } from "framer-motion";
 
 interface OnboardingFormsProps {
   config: string[];
@@ -69,7 +70,12 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
   const formIsValid = allFieldsFilled();
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0.95, x: "100%" }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: "-100%" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
       <form onSubmit={handleSave} className="space-y-4">
         {config.map((componentName, index) => (
           <React.Fragment key={index}>
@@ -80,7 +86,7 @@ const OnboardingForms: React.FC<OnboardingFormsProps> = ({
           Save
         </Button>
       </form>
-    </div>
+    </motion.div>
   );
 };
 
