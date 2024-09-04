@@ -41,8 +41,10 @@ const EmailLogin = ({ incrementStep }: EmailLoginProps) => {
       onSubmit={handleSubmit}
       className="flex flex-col gap-8"
       initial={{ opacity: 1, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: "-100%" }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
+      layout="position"
     >
       <div className="flex flex-col gap-1">
         <h2 className="text-3xl font-bold text-gray-700">Welcome!</h2>

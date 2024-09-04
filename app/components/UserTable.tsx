@@ -1,5 +1,6 @@
 import React from "react";
 import { trpc } from "@/utils/trpc";
+import Spinner from "@/app/components/Spinner";
 
 const UserTable = () => {
   const {
@@ -12,11 +13,16 @@ const UserTable = () => {
     staleTime: 0,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner />
+      </div>
+    );
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto text-sm">
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gray-100">
           <tr>

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/app/components/Button";
+import Card from "@/app/components/Card";
 import { trpc } from "@/utils/trpc";
 import React from "react";
 
@@ -13,7 +14,8 @@ const AdminPage = () => {
     React.useState("Save Configuration");
   const updateConfigMutation = trpc.admin.updateOnboardingConfig.useMutation();
 
-  const { data: existingConfig } = trpc.admin.getOnboardingConfig.useQuery();
+  const { data: existingConfig, isLoading } =
+    trpc.admin.getOnboardingConfig.useQuery();
 
   React.useEffect(() => {
     if (existingConfig) {
@@ -54,7 +56,7 @@ const AdminPage = () => {
 
   const isConfigValid = () => {
     const allComponents = [...screen1Config, ...screen2Config];
-    const uniqueComponents = new Set(allComponents);
+
     return (
       screen1Config.length > 0 &&
       screen2Config.length > 0 &&
@@ -88,95 +90,111 @@ const AdminPage = () => {
   }, [updateConfigMutation.isSuccess]);
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
-      <h1 className="text-2xl font-bold mb-6">Onboarding Flow Configuration</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Screen 1</h2>
-          {screen1Config.map((field, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
-              <select
-                value={field}
-                onChange={(e) => handleConfigChange(1, index, e.target.value)}
-                className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+    <div className="max-w-3xl w-full mx-auto px-10 py-20">
+      <Card>
+        <h1 className="text-2xl font-bold mb-6">
+          Onboarding Flow Configuration
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Screen 1</h2>
+            {screen1Config.map((field, index) => (
+              <div
+                key={`screen1-${index}`}
+                className="flex items-center space-x-2 mb-2"
               >
-                <option value="">Select a component</option>
-                {componentOptions.map((option) => (
-                  <option
-                    key={option}
-                    value={option}
-                    disabled={
-                      screen1Config.includes(option) ||
-                      screen2Config.includes(option)
-                    }
-                  >
-                    {option}
-                  </option>
-                ))}
-              </select>
-              <Button
-                type="button"
-                onClick={() => handleRemoveField(1, index)}
-                className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
-              >
-                Remove
-              </Button>
-            </div>
-          ))}
-          <Button type="button" onClick={() => handleAddField(1)}>
-            Add Field
-          </Button>
-        </div>
+                <select
+                  value={field}
+                  onChange={(e) =>
+                    handleConfigChange(1, index, e.target.value)
+                  }
+                  className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="">Select a component</option>
+                  {componentOptions.map((option) => (
+                    <option
+                      key={option}
+                      value={option}
+                      disabled={
+                        screen1Config.includes(option) ||
+                        screen2Config.includes(option)
+                      }
+                    >
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  type="button"
+                  onClick={() => handleRemoveField(1, index)}
+                  className="bg-red-500 text-red-50 hover:bg-red-600 focus:ring-red-500"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Screen 2</h2>
-          {screen2Config.map((field, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
-              <select
-                value={field}
-                onChange={(e) => handleConfigChange(2, index, e.target.value)}
-                className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              >
-                <option value="">Select a component</option>
-                {componentOptions.map((option) => (
-                  <option
-                    key={option}
-                    value={option}
-                    disabled={
-                      screen1Config.includes(option) ||
-                      screen2Config.includes(option)
-                    }
-                  >
-                    {option}
-                  </option>
-                ))}
-              </select>
-              <Button
-                type="button"
-                onClick={() => handleRemoveField(2, index)}
-                className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
-              >
-                Remove
-              </Button>
-            </div>
-          ))}
-          <Button type="button" onClick={() => handleAddField(2)}>
-            Add Field
-          </Button>
-        </div>
-
-        <Button
-          type="submit"
-          disabled={!isConfigValid() || updateConfigMutation.isPending}
-        >
-          {updateConfigMutation.isPending ? "Saving..." : saveButtonText}
-        </Button>
-        {updateConfigMutation.isError && (
-          <div className="text-red-500">
-            Error: {updateConfigMutation.error.message}
+            <Button type="button" onClick={() => handleAddField(1)}>
+              Add Field
+            </Button>
           </div>
-        )}
-      </form>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Screen 2</h2>
+            {screen2Config.map((field, index) => (
+              <div
+                key={`screen2-${index}`}
+                className="flex items-center space-x-2 mb-2"
+              >
+                <select
+                  value={field}
+                  onChange={(e) =>
+                    handleConfigChange(2, index, e.target.value)
+                  }
+                  className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="">Select a component</option>
+                  {componentOptions.map((option) => (
+                    <option
+                      key={option}
+                      value={option}
+                      disabled={
+                        screen1Config.includes(option) ||
+                        screen2Config.includes(option)
+                      }
+                    >
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  type="button"
+                  onClick={() => handleRemoveField(2, index)}
+                  className="bg-red-500 text-red-50 hover:bg-red-600 focus:ring-red-500"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+
+            <Button type="button" onClick={() => handleAddField(2)}>
+              Add Field
+            </Button>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={!isConfigValid() || updateConfigMutation.isPending}
+          >
+            {updateConfigMutation.isPending ? "Saving..." : saveButtonText}
+          </Button>
+          {updateConfigMutation.isError && (
+            <div className="text-red-500">
+              Error: {updateConfigMutation.error.message}
+            </div>
+          )}
+        </form>
+      </Card>
     </div>
   );
 };
