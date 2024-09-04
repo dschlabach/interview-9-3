@@ -5,7 +5,7 @@ import Card from "@/app/components/Card";
 import { trpc } from "@/utils/trpc";
 import React from "react";
 
-const componentOptions = ["aboutMe", "address", "birthdate"];
+const COMPONENT_OPTIONS = ["aboutMe", "address", "birthdate"];
 
 const AdminPage = () => {
   const [screen1Config, setScreen1Config] = React.useState<string[]>([]);
@@ -60,7 +60,7 @@ const AdminPage = () => {
     return (
       screen1Config.length > 0 &&
       screen2Config.length > 0 &&
-      allComponents.length === componentOptions.length &&
+      allComponents.length === COMPONENT_OPTIONS.length &&
       !allComponents.includes("")
     );
   };
@@ -105,13 +105,11 @@ const AdminPage = () => {
               >
                 <select
                   value={field}
-                  onChange={(e) =>
-                    handleConfigChange(1, index, e.target.value)
-                  }
+                  onChange={(e) => handleConfigChange(1, index, e.target.value)}
                   className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Select a component</option>
-                  {componentOptions.map((option) => (
+                  {COMPONENT_OPTIONS.map((option) => (
                     <option
                       key={option}
                       value={option}
@@ -148,13 +146,11 @@ const AdminPage = () => {
               >
                 <select
                   value={field}
-                  onChange={(e) =>
-                    handleConfigChange(2, index, e.target.value)
-                  }
+                  onChange={(e) => handleConfigChange(2, index, e.target.value)}
                   className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="">Select a component</option>
-                  {componentOptions.map((option) => (
+                  {COMPONENT_OPTIONS.map((option) => (
                     <option
                       key={option}
                       value={option}

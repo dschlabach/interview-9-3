@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { trpc } from "@/utils/trpc";
-import AboutMe from "@/app/components/AboutMe";
-import AddressInputs from "@/app/components/AddressInputs";
-import BirthdayInput from "@/app/components/BirthdayInput";
+import AboutMe from "@/app/components/inputs/AboutMe";
+import AddressInputs from "@/app/components/inputs/AddressInputs";
+import BirthdayInput from "@/app/components/inputs/BirthdayInput";
 import Button from "@/app/components/Button";
 import { motion } from "framer-motion";
 

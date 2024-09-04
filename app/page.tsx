@@ -1,6 +1,6 @@
 "use client";
 
-import OnboardingFlow from "@/app/components/OnboardingFlow";
+import OnboardingFlow from "@/app/components/onboarding/OnboardingFlow";
 
 export default function Home() {
   return (

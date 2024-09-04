@@ -1,15 +1,14 @@
 "use client";
 
-import EmailLogin from "@/app/components/EmailLogin";
+import EmailLogin from "@/app/components/onboarding/EmailLogin";
 import React from "react";
-import OnboardingForms from "@/app/components/OnboardingForms";
-import StepIndicator from "@/app/components/StepIndicator";
+import OnboardingForms from "@/app/components/onboarding/OnboardingForms";
+import StepIndicator from "@/app/components/onboarding/StepIndicator";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
-import FinishedOnboarding from "@/app/components/FinishedOnboarding";
-import Spinner from "@/app/components/Spinner";
+import FinishedOnboarding from "@/app/components/onboarding/FinishedOnboarding";
 import { AnimatePresence, motion } from "framer-motion";
-import { DEFAULT_ANIMATION, FADE_IN_ANIMATION } from "@/utils/animations";
+import { DEFAULT_ANIMATION } from "@/utils/animations";
 import Card from "@/app/components/Card";
 
 const getUserId = () => {

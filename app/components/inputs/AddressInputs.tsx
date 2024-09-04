@@ -1,5 +1,5 @@
 import React from "react";
-import Input from "@/app/components/Input";
+import Input from "@/app/components/inputs/Input";
 
 interface AddressInputsProps {
   onChange: (field: string, value: string) => void;
